@@ -4,7 +4,7 @@ const addUser = async (username, password) => {
    await db("users").insert({ username, password });
   return getByUsername(username);
 };
-const getUsers = () => {
+const getUsers = async() => {
 ;
   const getAllUsers = await db("users");
   return getAllUsers;

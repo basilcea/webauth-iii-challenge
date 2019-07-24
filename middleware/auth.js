@@ -1,5 +1,6 @@
 const  dotenv = require('dotenv')
 const  Users = require('../auth/authModel')
+const jwt = require('jsonwebtoken');
 dotenv.config()
 // const Auth =(req, res, next)=> {``
 //     if (req.session && req.session.user) {
@@ -8,19 +9,18 @@ dotenv.config()
 //         res.status(401).json({ message: 'you shall not pass!!' });
 //       }
 // };
-
-const Auth = {
   // eslint-disable-next-line consistent-return
-  async checkToken(req, res, next) {
+  const auth = async (req, res, next) =>{
     const token = req.headers.authorization.split(' ')[1] || req.params.token;
     // check if token exists
-    if (!token) {
-      return res.status(401).send({
-        status: 401,
-        error: 'You need to Login',
-      });
-    }
+ 
     try {
+      if (!token) {
+        return res.status(401).send({
+          status: 401,
+          error: 'You need to Login',
+        });
+      }
       const decrypt = await jwt.verify(token, process.env.SECRET);
       const rows  = await Users.getByUsername(decrypt.username);
       // check if token has expired
@@ -41,8 +41,7 @@ const Auth = {
         error: error.toString(),
       });
     }
-  },
-};
+  }
 
 
 const generateToken =(user) => {
@@ -58,4 +57,4 @@ const generateToken =(user) => {
   // extract the secret away so it can be required and used where needed
   return jwt.sign(payload, process.env.SECRET, options); // this method is synchronous
 }
-module.exports = {Auth , generateToken};
+module.exports = { auth , generateToken};

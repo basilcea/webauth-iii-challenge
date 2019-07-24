@@ -1,6 +1,6 @@
 const encrypt = require("../middleware/myCrypt");
 const bcrypt = require("bcryptjs");
-const checkLogin =  require('../middleware/auth')
+const checkLogin =  require('../middleware/auth');
 const Users = require("./authModel");
 const status = (res, code, data) => {
   return res.status(code).json(data);
@@ -33,7 +33,7 @@ const login = async (req, res) => {
 
     status(res, 200, `Welcome ${getUser.username}, token:${token}`);
   } catch (err) {
-    status(res, 500, 'Could not login');
+    status(res, 500, err.toString());
   }
 };
 const getUsers = async (req,res) => {
